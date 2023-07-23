@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@1,300&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <button id="continueButton">Continue with AspaPay</button>
+
+    <div class="modal-container" id="modal-container">
+      <section class="modal-content">
+        <div class="modal-header">
+          <h2 class="logo">AspaPay</h2>
+          <p class="close">&times;</p>
+        </div>
+
+        <div class="summary">
+          <h4 class="summary-text">Summary:</h4>
+          <p class="email">Michael@gmail.com</p>
+          <p class="amount">₦5,000</p>
+        </div>
+
+        <div class="modal-body">
+          <p class="pay-with-text">Pay with:</p>
+          <div class="button-wrapper">
+            <button
+              class="option-card active-card"
+              onclick="makeActive(this, 'card-transaction')"
+            >
+              card
+            </button>
+            <button
+              class="option-card"
+              onclick="makeActive(this, 'bank-transfer')"
+            >
+              bank transfer
+            </button>
+            <button
+              class="option-card"
+              onclick="makeActive(this, 'ussd-transfer')"
+            >
+              USSD
+            </button>
+          </div>
+
+          <div class="card-details">
+            <div class="card-row">
+              <label for="" class="card-label" id="nameOnCard"
+                >name on card</label
+              >
+              <input
+                type="text"
+                id="name-input"
+                class="card-input"
+                placeholder="Michael J. Ross"
+                onfocus="addFocusBorder(this.parentNode)"
+                onblur="removeFocusBorder(this.parentNode)"
+              />
+            </div>
+            <!-- <p>name error</p> -->
+
+            <div class="card-row">
+              <label for="" class="card-label">card number</label>
+              <input
+                type="text"
+                class="card-input"
+                placeholder="0000 0000 0000 0000"
+                id="card-input"
+                onfocus="addFocusBorder(this.parentNode)"
+                onblur="removeFocusBorder(this.parentNode)"
+              />
+            </div>
+            <!-- <p>card number error</p> -->
+
+            <div class="card-row-last">
+              <div class="expiry-input">
+                <label for="" class="card-label">card expiry</label>
+                <input
+                  type="text"
+                  class="card-input"
+                  placeholder="08/25"
+                  id="expiryDate"
+                  onfocus="addFocusBorder(this.parentNode)"
+                  onblur="removeFocusBorder(this.parentNode)"
+                />
+                <!-- <p>card expiry error</p> -->
+              </div>
+              <div class="cvv-input">
+                <label for="" class="card-label">CVV</label>
+                <input
+                  type="text"
+                  class="card-input"
+                  placeholder="124"
+                  id="cvv"
+                  onfocus="addFocusBorder(this.parentNode)"
+                  onblur="removeFocusBorder(this.parentNode)"
+                />
+                <!-- <p>cvv error</p> -->
+              </div>
+            </div>
+
+            <div>
+              <button class="submit-button" type="submit">pay ₦5,000</button>
+            </div>
+          </div>
+
+          <div id="ussd-details">
+            <select id="selectBank" class="card-row-select">
+              <option value="">Select</option>
+              <option value="firstBank">First Bank</option>
+              <option value="zenithBank">Zenith Bank</option>
+              <option value="accessBank">Access Bank</option>
+            </select>
+
+            <h4 id="ussd-empty">Select a bank to get a ussd code</h4>
+
+            <h4 id="ussd-full">
+              Click on the copy button to copy the ussd code. Then proceed to
+              dial the code. Click on verify to finish or cancel to cancel the
+              transaction
+            </h4>
+
+            <div id="ussd-details-wrapper">
+              <div class="copy-wrapper">
+                <h2 id="displayCode"></h2>
+                <button id="copy-button" onclick="copyCode(this)">copy</button>
+              </div>
+              <div id="timer">
+                <span id="expires">Expires in: </span>
+                <span id="timerDisplay"></span>
+              </div>
+              <div id="buttonsWrapper">
+                <button class="verify-btn" onclick="">verify</button>
+                <button class="cancel-btn" onclick="">cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="bank-details">
+            <h4 id="bank-empty">Select a bank to get account details</h4>
+
+            <h4 id="bank-full">
+              Make payment using the account information below. When you finish,
+              click on verify or click on the cancel button to cancel.
+            </h4>
+
+            <select id="selectBankAccount" class="card-row-select">
+              <option value="">Select</option>
+              <option value="firstBank">First Bank</option>
+              <option value="zenithBank">Zenith Bank</option>
+              <option value="accessBank">Access Bank</option>
+            </select>
+
+            <div id="bank-details-wrapper">
+              <div class="bank-row-full">
+                <label for="bank-name" class="bank-label" id="bankName"
+                  >Bank Name</label
+                >
+                <input
+                  type="text"
+                  id="bank-name"
+                  class="bank-input"
+                  placeholder=""
+                  readonly
+                />
+                <button
+                  id="copy-button-bank"
+                  onclick="copyBankTransfer(this, 'bank-name')"
+                >
+                  copy
+                </button>
+              </div>
+
+              <div style="display: flex; gap: 10px">
+              <div class="bank-row">
+                <label
+                  for="bank-account-number"
+                  class="bank-label"
+                  id="bankAccountNumber"
+                  >Account Number</label
+                >
+                <input
+                  type="text"
+                  id="bank-account-number"
+                  class="bank-input"
+                  placeholder=""
+                  readonly
+                />
+                <button
+                  id="copy-button-bank"
+                  onclick="copyBankTransfer(this, 'bank-account-number')"
+                >
+                  copy
+                </button>
+              </div>
+
+              <div class="bank-row">
+                <label for="bank-amount" class="bank-label" id="bankAmount"
+                  >Amount</label
+                >
+                <input
+                  type="text"
+                  id="bank-amount"
+                  class="bank-input"
+                  placeholder=""
+                  readonly
+                />
+                <button
+                  id="copy-button-bank"
+                  onclick="copyBankTransfer(this, 'bank-amount')"
+                >
+                  copy
+                </button>
+              </div>
+
+              </div>
+
+                <div class="bank-row-full">
+                  <label
+                    for="bank-account-nam"
+                    class="bank-label"
+                    id="accountName"
+                    >Account Name</label
+                  >
+                  <input
+                    type="text"
+                    id="bank-account-name"
+                    class="bank-input"
+                    placeholder=""
+                    readonly
+                  />
+                  <button
+                    id="copy-button-bank"
+                    onclick="copyBankTransfer(this, 'bank-account-name')"
+                  >
+                    copy
+                  </button>
+                </div>
+               
+              </div>
+
+              <div id="buttonsWrapper">
+                <button class="verify-btn" onclick="">verify</button>
+                <button class="cancel-btn" onclick="">cancel</button>
+              </div>
+            </div>
+
+             
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+
+  <script src="./scripts.js"></script>
+</html>
